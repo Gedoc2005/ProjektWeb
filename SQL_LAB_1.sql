@@ -133,8 +133,37 @@ WHERE ProductSubcategoryID IS NULL
 GROUP BY ProductSubcategoryID
 
 -- Uppgift 2.5
-SELECT COUNT(ProductSubcategoryID)
-FROM Production.Product
+SELECT ProductID
+	,	COUNT(ProductID) AS 'Number of Products'
+FROM Production.ProductInventory
+GROUP BY ProductID
 
 
+SELECT ProductID, LocationID
+FROM Production.ProductInventory
 
+-- Uppgift 2.6********************
+SELECT ProductID
+	,	LocationID
+FROM Production.ProductInventory
+WHERE LocationID NOT LIKE '40' AND ProductID < 100
+
+-- Uppgift 2.7
+SELECT ProductID
+	,	LocationID
+	,	Shelf
+FROM Production.ProductInventory
+
+-- Uppgift 2.8
+SELECT AVG(ProductID) AS 'AverageProductID'
+	,	LocationID
+FROM Production.ProductInventory
+WHERE LocationID = '10'
+GROUP BY LocationID
+
+-- Uppgift 2.9
+SELECT AVG(ProductID) AS 'AverageProductID'
+	,	LocationID
+FROM Production.ProductInventory
+WHERE LocationID = '10'
+GROUP BY LocationID
