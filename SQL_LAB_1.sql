@@ -168,3 +168,12 @@ FROM Production.ProductCategory
 
 --DEL 3
 --Uppgift 3.1
+SELECT Table1.Name AS 'T1', Table2.Name AS 'T2'
+	,	Table1.CountryRegionCode AS 'T3'
+	,	Table2.CountryRegionCode AS 'T4'
+FROM Person.CountryRegion AS Table1
+	INNER JOIN Person.StateProvince Table2 ON Table1.CountryRegionCode = Table2.CountryRegionCode
+
+SELECT Name
+FROM Person.StateProvince
+
