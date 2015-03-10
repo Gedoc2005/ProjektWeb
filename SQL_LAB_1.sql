@@ -162,8 +162,9 @@ WHERE LocationID = '10'
 GROUP BY LocationID
 
 -- Uppgift 2.9
-SELECT AVG(ProductID) AS 'AverageProductID'
-	,	LocationID
-FROM Production.ProductInventory
-WHERE LocationID = '10'
-GROUP BY LocationID
+SELECT Name, ROW_NUMBER() OVER(ORDER BY Name ASC) AS Row
+FROM Production.ProductCategory
+
+
+--DEL 3
+--Uppgift 3.1
