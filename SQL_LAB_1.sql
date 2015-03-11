@@ -168,12 +168,70 @@ FROM Production.ProductCategory
 
 --DEL 3
 --Uppgift 3.1
-SELECT Table1.Name AS 'T1', Table2.Name AS 'T2'
+SELECT Table1.Name AS 'Country', Table2.Name AS 'Province'
 	,	Table1.CountryRegionCode AS 'T3'
 	,	Table2.CountryRegionCode AS 'T4'
 FROM Person.CountryRegion AS Table1
 	INNER JOIN Person.StateProvince Table2 ON Table1.CountryRegionCode = Table2.CountryRegionCode
 
-SELECT Name
-FROM Person.StateProvince
 
+--Uppgift 3.2
+SELECT Table1.Name AS 'Country', Table2.Name AS 'Province'
+	,	Table1.CountryRegionCode AS 'T3'
+	,	Table2.CountryRegionCode AS 'T4'
+FROM Person.CountryRegion AS Table1
+	INNER JOIN Person.StateProvince Table2 ON Table1.CountryRegionCode = Table2.CountryRegionCode
+WHERE Table1.Name LIKE 'Germany' OR Table1.Name LIKE 'Canada'
+
+--Uppgift 3.3
+SELECT  S1.SalesOrderNumber
+	,	S1.SalesOrderID
+	,	S1.OrderDate
+	,	S1.SalesPersonID
+	,	S2.BusinessEntityID
+	,	S2.Bonus
+	,	S2.SalesYTD
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Sales.SalesPerson AS S2 ON S1.TerritoryID = S2.TerritoryID
+
+--Uppgift 3.4
+SELECT S1.SalesOrderID
+	,	S1.OrderDate
+	,	S2.Bonus
+	,	S2.SalesYTD
+	,	S2.TerritoryID
+	,	S3.JobTitle
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Sales.SalesPerson AS S2 ON S1.TerritoryID = S2.TerritoryID
+	INNER JOIN HumanResources.Employee AS S3 ON S2.BusinessEntityID = S3.BusinessEntityID
+
+--Uppgift 3.5
+SELECT P.FirstName
+	,	P.LastName
+	,	S1.SalesOrderID
+	,	S1.OrderDate
+	,	S2.Bonus
+	,	S2.TerritoryID
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Sales.SalesPerson AS S2 ON S1.TerritoryID = S2.TerritoryID
+	INNER JOIN HumanResources.Employee AS S3 ON S2.BusinessEntityID = S3.BusinessEntityID
+	INNER JOIN Person.Person AS P ON S3.BusinessEntityID = P.BusinessEntityID
+
+--Uppgift 3.6
+SELECT P.FirstName
+	,	P.LastName
+	,	S1.SalesOrderID
+	,	S1.OrderDate
+	,	S2.Bonus
+	,	S2.TerritoryID
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Sales.SalesPerson AS S2 ON S1.TerritoryID = S2.TerritoryID
+	INNER JOIN Person.Person AS P ON S2.BusinessEntityID = P.BusinessEntityID
+
+--Uppgift 3.7
+SELECT P.FirstName
+	,	P.LastName
+	,	S1.SalesOrderID
+	,	S1.OrderDate
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Person.Person AS P ON S2.BusinessEntityID = P.BusinessEntityID
