@@ -125,63 +125,66 @@ SELECT ProductSubcategoryID
 FROM Production.Product
 GROUP BY ProductSubcategoryID
 
--- Uppgift 2.4******************************************
+-- Uppgift 2.4 A
 SELECT ProductSubcategoryID
 	,	Count(ProductID) AS 'Number of Products'
 FROM Production.Product
 WHERE ProductSubcategoryID IS NULL
 GROUP BY ProductSubcategoryID
 
+--Uppgift 2.4 B
+SELECT COUNT(*) - COUNT(P.ProductSubcategoryID) AS 'Number of Products'
+FROM Production.Product AS P
+
+
 -- Uppgift 2.5
-SELECT ProductID
-	,	COUNT(ProductID) AS 'Number of Products'
-FROM Production.ProductInventory
-GROUP BY ProductID
+SELECT SUM(P.Quantity) AS 'SUM OF PRODUCTS'
+FROM Production.ProductInventory AS P
+GROUP BY(P.ProductID)
 
 
-SELECT ProductID, LocationID
-FROM Production.ProductInventory
-
--- Uppgift 2.6********************
-SELECT ProductID
-	,	LocationID
-FROM Production.ProductInventory
-WHERE LocationID NOT LIKE '40' AND ProductID < 100
+-- Uppgift 2.6
+SELECT SUM(P.Quantity)
+FROM Production.ProductInventory AS P
+WHERE P.LocationID = 40	
+GROUP BY(P.ProductID)
+HAVING SUM(P.Quantity) < 100
 
 -- Uppgift 2.7
-SELECT ProductID
-	,	LocationID
-	,	Shelf
-FROM Production.ProductInventory
+SELECT SUM(P.Quantity) AS 'SUM OF Q'
+	,	P.Shelf
+FROM Production.ProductInventory AS P
+WHERE P.LocationID = 40	
+GROUP BY(P.ProductID), P.Shelf
+HAVING SUM(P.Quantity) < 100
 
 -- Uppgift 2.8
-SELECT AVG(ProductID) AS 'AverageProductID'
+SELECT AVG(Quantity) AS 'AverageProductID'
 	,	LocationID
 FROM Production.ProductInventory
 WHERE LocationID = '10'
 GROUP BY LocationID
 
 -- Uppgift 2.9
-SELECT Name, ROW_NUMBER() OVER(ORDER BY Name ASC) AS Row
+SELECT Name, ROW_NUMBER() OVER(ORDER BY Name ASC) AS 'Row'
 FROM Production.ProductCategory
 
 
 --DEL 3
 --Uppgift 3.1
-SELECT Table1.Name AS 'Country', Table2.Name AS 'Province'
-	,	Table1.CountryRegionCode AS 'T3'
-	,	Table2.CountryRegionCode AS 'T4'
+SELECT Table1.Name AS 'Country'
+	,	 Table2.Name AS 'Province'
 FROM Person.CountryRegion AS Table1
 	INNER JOIN Person.StateProvince Table2 ON Table1.CountryRegionCode = Table2.CountryRegionCode
 
 
 --Uppgift 3.2
-SELECT Table1.Name AS 'Country', Table2.Name AS 'Province'
-	,	Table1.CountryRegionCode AS 'T3'
-	,	Table2.CountryRegionCode AS 'T4'
+SELECT Table1.Name AS 'Country'
+	,	 Table2.Name AS 'Province'
 FROM Person.CountryRegion AS Table1
 	INNER JOIN Person.StateProvince Table2 ON Table1.CountryRegionCode = Table2.CountryRegionCode
 WHERE Table1.Name LIKE 'Germany' OR Table1.Name LIKE 'Canada'
+ORDER BY Table2.Name, Table1.Name
 
 --Uppgift 3.3
 SELECT  S1.SalesOrderNumber
@@ -229,9 +232,65 @@ FROM Sales.SalesOrderHeader AS S1
 	INNER JOIN Person.Person AS P ON S2.BusinessEntityID = P.BusinessEntityID
 
 --Uppgift 3.7
-SELECT P.FirstName
+SELECT 	P.FirstName
 	,	P.LastName
 	,	S1.SalesOrderID
 	,	S1.OrderDate
 FROM Sales.SalesOrderHeader AS S1
-	INNER JOIN Person.Person AS P ON S2.BusinessEntityID = P.BusinessEntityID
+	INNER JOIN Person.Person AS P ON S1.SalesPersonID = P.BusinessEntityID
+
+--SELECT SUM(SOH.TotalDue) AS 'SalesAmount'
+--,ST.Name AS 'SalesTerritory'
+--FROM Sales.SalesOrderHeader AS SOH
+--INNER JOIN Sales.SalesTerritory AS ST
+--ON SOH.TerritoryID = ST.TerritoryID
+--GROUP BY ST.Name
+
+
+--SELECT SUM(SOH.TotalDue) AS 'SalesAmount'
+--,ST.Name AS'SalesTerritory'
+--FROM Sales.SalesOrderHeader AS SOH
+--INNER JOIN Sales.SalesTerritory AS ST
+--ON SOH.TerritoryID =ST.TerritoryID
+--WHERE ST.Name  IN('Northwest','Southwest','Southeast','Northeast')
+--GROUP BY ST.Name
+--HAVING SUM(SOH.TotalDue)>15000000
+
+--Uppgift 3.8
+SELECT	P.FirstName + ' ' + P.LastName AS SalesPerson
+	,	SEL.OrderQty
+	,	P.PersonType
+	,	SEL.SalesOrderID
+	,	S1.ModifiedDate
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Person.Person AS P ON S1.SalesPersonID = P.BusinessEntityID
+	INNER JOIN Sales.SalesOrderDetail AS SEL ON S1.SalesOrderID = SEL.SalesOrderID
+	ORDER BY OrderDate, SalesOrderID
+
+--Uppgift 3.9
+SELECT	P.FirstName + ' ' + P.LastName AS SalesPerson
+	,	SEL.OrderQty
+	,	P.PersonType
+	,	SEL.SalesOrderID
+	,	S1.ModifiedDate
+	,	P1.Name
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Person.Person AS P ON S1.SalesPersonID = P.BusinessEntityID
+	INNER JOIN Sales.SalesOrderDetail AS SEL ON S1.SalesOrderID = SEL.SalesOrderID
+	INNER JOIN Production.Product AS P1 ON SEL.ProductID = P1.ProductID
+	ORDER BY OrderDate, SalesOrderID
+
+--Uppgift 3.10
+SELECT  P.FirstName + ' ' + P.LastName AS SalesPerson
+	,	SEL.OrderQty
+	,	P.PersonType
+	,	SEL.SalesOrderID
+	,	S1.ModifiedDate
+	,	P1.Name
+	,	S1.SubTotal
+FROM Sales.SalesOrderHeader AS S1
+	INNER JOIN Person.Person AS P ON S1.SalesPersonID = P.BusinessEntityID
+	INNER JOIN Sales.SalesOrderDetail AS SEL ON S1.SalesOrderID = SEL.SalesOrderID
+	INNER JOIN Production.Product AS P1 ON SEL.ProductID = P1.ProductID
+	WHERE S1.SubTotal > 100000 AND DATEPART(year, S1.OrderDate) > 2004
+	ORDER BY OrderDate, SalesOrderID
