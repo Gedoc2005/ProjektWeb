@@ -99,9 +99,9 @@ AND ListPrice BETWEEN 1000 AND 2000
 OR ProductSubCategoryID = 1
 ORDER BY ProductID
 
--- Uppgift 1.16 ********************************************
+-- Uppgift 1.16
 SELECT  ProductID
-	,	Color
+	,  ISNULL(Color, 'Unknown') AS 'Color'
 	,	ListPrice
 FROM Production.Product
 
@@ -239,23 +239,6 @@ SELECT 	P.FirstName
 FROM Sales.SalesOrderHeader AS S1
 	INNER JOIN Person.Person AS P ON S1.SalesPersonID = P.BusinessEntityID
 
---SELECT SUM(SOH.TotalDue) AS 'SalesAmount'
---,ST.Name AS 'SalesTerritory'
---FROM Sales.SalesOrderHeader AS SOH
---INNER JOIN Sales.SalesTerritory AS ST
---ON SOH.TerritoryID = ST.TerritoryID
---GROUP BY ST.Name
-
-
---SELECT SUM(SOH.TotalDue) AS 'SalesAmount'
---,ST.Name AS'SalesTerritory'
---FROM Sales.SalesOrderHeader AS SOH
---INNER JOIN Sales.SalesTerritory AS ST
---ON SOH.TerritoryID =ST.TerritoryID
---WHERE ST.Name  IN('Northwest','Southwest','Southeast','Northeast')
---GROUP BY ST.Name
---HAVING SUM(SOH.TotalDue)>15000000
-
 --Uppgift 3.8
 SELECT	P.FirstName + ' ' + P.LastName AS SalesPerson
 	,	SEL.OrderQty
@@ -294,3 +277,78 @@ FROM Sales.SalesOrderHeader AS S1
 	INNER JOIN Production.Product AS P1 ON SEL.ProductID = P1.ProductID
 	WHERE S1.SubTotal > 100000 AND DATEPART(year, S1.OrderDate) > 2004
 	ORDER BY OrderDate, SalesOrderID
+
+--Uppgift 3.11
+SELECT  PC.Name AS 'RegionName'
+	,	PS.Name AS 'ProvinceName'
+FROM Person.CountryRegion AS PC
+	LEFT OUTER JOIN Person.StateProvince AS PS ON PC.CountryRegionCode = PS.CountryRegionCode
+	ORDER BY PC.Name, PS.Name
+
+--Uppgift 3.12
+SELECT SC.CustomerID AS 'Customers without orders'
+FROM Sales.Customer AS SC
+	FULL OUTER JOIN Sales.SalesOrderHeader AS SS ON SC.CustomerID = SS.CustomerID
+	WHERE SS.CustomerID IS NULL
+ 
+--Uppgift 3.13*
+SELECT	PP.Name
+	,	PP.ProductModelID
+FROM Sales.Customer AS SC
+	FULL OUTER JOIN Production.Product AS PP ON SC.ModifiedDate = PP.ModifiedDate
+ WHERE PP.Name IS NOT NULL AND PP.ProductModelID IS NOT NULL
+
+--Uppgift 3.14
+SELECT PP.FirstName + ' ' + PP.LastName AS FULLNAME
+	,	COUNT(SSOH.SalesPersonID) AS 'NoOfOrders'
+	,	SUM(SSOH.SubTotal) AS 'TotalSum'
+FROM Sales.SalesPerson AS SS
+	INNER JOIN Person.Person AS PP ON SS.BusinessEntityID = PP.BusinessEntityID
+	INNER JOIN HumanResources.Employee AS HRE ON SS.BusinessEntityID = HRE.BusinessEntityID
+	INNER JOIN Sales.SalesOrderHeader AS SSOH ON SS.BusinessEntityID = SSOH.SalesPersonID
+	GROUP BY SSOH.SalesPersonID, PP.FirstName + ' ' + PP.LastName
+
+--Uppgift 3.15
+SELECT ST.Name
+	,	DATEPART(YEAR, SOH.OrderDate) AS 'Year'
+	,	SUM(ST.SalesLastYear) AS 'LastYearSales'
+	,	SUM(SOH.SubTotal) AS 'SubTotal'
+FROM Sales.SalesOrderHeader AS SOH
+	INNER JOIN Sales.SalesTerritory AS ST ON SOH.TerritoryID = ST.TerritoryID
+	GROUP BY DATEPART(YEAR, SOH.OrderDate), ST.Name
+	ORDER BY [YEAR] , ST.Name
+
+--Uppgift 3.16
+SELECT COUNT(EDH.DepartmentID) AS 'NumberOfDepartments'
+	,  P.FirstName + ' ' + P.LastName AS 'FullName'
+FROM Person.Person AS P
+	INNER JOIN HumanResources.Employee AS E ON P.BusinessEntityID = E.BusinessEntityID
+	INNER JOIN HumanResources.EmployeeDepartmentHistory AS EDH ON P.BusinessEntityID = EDH.BusinessEntityID
+	GROUP BY P.FirstName + ' ' + P.LastName
+	HAVING COUNT(EDH.DepartmentID) > 1
+
+--Uppgift 3.17
+SELECT MIN(SOH.SubTotal) AS 'Subtotal'
+	,	'MIN' AS 'MIN,MAX,AVG'
+FROM Sales.SalesOrderHeader AS SOH
+UNION
+SELECT MAX(SOH.SubTotal)
+	,	'MAX'
+FROM Sales.SalesOrderHeader AS SOH
+UNION
+SELECT AVG(SOH.SubTotal)
+	,	'AVG'
+FROM Sales.SalesOrderHeader AS SOH
+
+--Uppgift 3.18
+SELECT TOP 10 P.ListPrice
+	,	P.Name
+FROM Production.Product AS P
+ORDER BY P.ListPrice DESC
+
+--Uppgift 3.19
+SELECT TOP 1 PERCENT P.DaysToManufacture AS 'Tillverknings Längde'
+	,	P.Name
+	,	P.ListPrice
+FROM Production.Product AS P
+ORDER BY P.DaysToManufacture DESC
