@@ -1,0 +1,43 @@
+--CREATE DATABASE NewDatabase;
+--GO
+--USE NewDatabase;
+--GO
+----Ny databas
+--CREATE TABLE dbo.Customers
+--(
+--CustomerID int NOT NULL,
+--Name varchar(100)NOT NULL,
+--EmailAddress varchar(100)
+--);
+--CREATE TABLE dbo.Orders
+--(
+--OrderId int NOT NULL,
+--OrderDate date NOT NULL
+--	CONSTRAINT DF_Orderdate,
+--ShipDate date NULL,
+--CustomerId int NOT NULL
+--);
+
+--ALTER TABLE dbo.Orders
+--ADD CONSTRAINT DF_
+
+--CREATE DATABASE ExistingDatabase;
+--GO
+--USE ExistingDatabase;
+--GO
+----Existerande databas
+--CREATE TABLE dbo.Customers
+--(
+--CustomerID int NOT NULL,
+--Name varchar(100)NOT NULL,
+--EmailAddress varchar(100)
+--);
+--CREATE TABLE dbo.Orders
+--(
+--OrderId int NOT NULL,
+--OrderDate date NOT NULL,
+--ShipDate date NULL,
+--CustomerId int NOT NULL
+--);
+
+

@@ -1,5 +1,6 @@
 CREATE DATABASE DemoDatabase1;
-USE DemoDatabase1
+USE DemoDatabase1
+
 CREATE TABLE Orders
 (
 	OrderID int NOT NULL,
