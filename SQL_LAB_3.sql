@@ -66,12 +66,11 @@ CopyID int,
 LoanDate date NULL,
 	--CONSTRAINT DF_LoanDate_CurrentDate DEFAULT GETDATE(),
 [ReturnDate] date NOT NULL,
-CONSTRAINT PK_Loan_LoanID PRIMARY KEY(LoanID, CustomerID),
+CONSTRAINT PK_Loan_LoanID PRIMARY KEY(LoanID),
 CONSTRAINT FK_Loan_CustomerID FOREIGN KEY(CustomerID) REFERENCES Customer (CustomerID),
 CONSTRAINT FK_Loan_CopyID FOREIGN KEY(CopyID) REFERENCES Copy (CopyID)
 );
 
---**********
 --kopia/låntagare
 CREATE TABLE [CopyOut]
 (
