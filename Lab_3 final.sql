@@ -232,9 +232,6 @@ AS
 SELECT COUNT(B.Name) AS NumberOfCopyAvaliable
 	, B.Name AS BookTitle
 	, S.Value
-
-	--,B.BookID
-	--,S.Value
 FROM dbo.Copy AS CO
 	INNER JOIN dbo.Book AS B ON CO.BookID = B.BookID
 	INNER JOIN dbo.[Status] AS S ON S.StatusID = CO.StatusID
@@ -266,7 +263,7 @@ BEGIN
 END	
 GO
 
--- Lånar ut boken med KopiaID 9 till kund med kundnummer 4
+-- Lånar ut boken med KopiaID 2 till kund med kundnummer 3
 EXEC dbo.uspMakeLoan @CopyID = 2, @CustomerID = 3
 GO
 --SELECT * FROM Loan
@@ -296,7 +293,7 @@ BEGIN
 END	
 GO
 
--- Lämnar tillbaka boken med KopiaID 9
+-- Lämnar tillbaka boken med KopiaID 2
 EXEC dbo.uspReturnBook @CopyID = 2
 GO
 
